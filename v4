@@ -1,0 +1,23 @@
+Add-Type -TypeDefinition @"
+using System;
+using System.Net.NetworkInformation;
+using System.Threading.Tasks;
+
+public class LabScanner {
+    public static void Run() {
+        Parallel.For(0, 255, new ParallelOptions { MaxDegreeOfParallelism = 100 }, a => {
+            Parallel.For(1, 255, new ParallelOptions { MaxDegreeOfParallelism = 50 }, b => {
+                string ip = "192.168." + a + "." + b;
+                using (Ping p = new Ping()) {
+                    try {
+                        if (p.Send(ip, 50).Status == IPStatus.Success) {
+                            Console.WriteLine("[ONLINE] " + ip);
+                        }
+                    } catch {}
+                }
+            });
+        });
+    }
+}
+                         "@; [LabScanner]::Run()
+                         
