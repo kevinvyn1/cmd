@@ -1,0 +1,10 @@
+$ips = foreach($a in 0..254){ foreach($b in 1..254){ "192.168.$a.$b" } }
+[System.Threading.Tasks.Parallel]::ForEach($ips, [System.Threading.Tasks.ParallelOptions]@{MaxDegreeOfParallelism=1500}, [Action[string]]{
+    param($ip)
+    try {
+        if ((New-Object Net.NetworkInformation.Ping).Send($ip, 50).Status -eq 'Success') {
+            [Console]::WriteLine("[ONLINE] $ip")
+        }
+    } catch {}
+    })
+          
