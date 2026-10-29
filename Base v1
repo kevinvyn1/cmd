@@ -1,0 +1,1 @@
+powershell -c "0..254|%{ $a=$_; 1..254|%{ \"192.168.$a.$_\" } } | ForEach-Object -Parallel { if((New-Object Net.NetworkInformation.Ping).Send($_,40).Status -eq 'Success'){ Write-Host \"[ONLINE] $_\" -ForegroundColor Green } } -ThrottleLimit 500"
